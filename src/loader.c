@@ -17,7 +17,7 @@ uint8_t* loader_load_rom(const char* path) {
 
     blocks = fread(&rom_buffer, sizeof(uint8_t), 2048, rom_fd);
     if (blocks < 2048) {
-        printf("Could only read %zu Bytes\n", blocks);
+        printf("Could only read %u Bytes\n", (unsigned int)blocks);
         return NULL;
     }
 

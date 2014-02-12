@@ -13,14 +13,14 @@ int main(int argc, char** argv) {
         return -1;
     }
     
-    // Setup system state
+    /* Setup system state */
     z80_init();
     z80_graphics_init();
 
-    // Main system loop
-    //while(1) {
-    //    z80_emulate_cycle();
-    //}
+    /* Main system loop */
+    /*while(1) {
+        z80_emulate_cycle();
+    }*/
 
     return 0;
 }
