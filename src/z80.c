@@ -52,7 +52,6 @@ void z80_emulate_cycle(void) {
 void z80_graphics_init(void) {
     return;
 }
-     
 
 void z80_init(void) {
     /* Set PC to first address in RAM */
@@ -110,74 +109,275 @@ void z80_decode_inst() {
     uint8_t operand_1, operand_2, operand_3;
     uint8_t s_reg, t_reg;
 
-    switch(z80_state.pc) {
-    /* Load and Exchange */
-    case 0xDD:
-        operand_1 = z80_fetch_byte();
+    operand_1 = z80_fetch_byte();
 
-        /* LD r, r' */
-        if ((operand_1 & 0xC0) == 0x40) {
-            /* Get source and destination registers */
-            s_reg = z80_get_s_reg(operand_1);
-            t_reg = z80_get_t_reg(operand_1);
+    /* LD r, r' */
+    if ((operand_1 & 0xC0) == 0x40) {
+        /* Get source and destination registers */
+        s_reg = z80_get_s_reg(operand_1);
+        t_reg = z80_get_t_reg(operand_1);
 
-            /* Store value of source register in target register*/
-            z80_state.gp[t_reg] = z80_state.gp[s_reg];
+        /* Store value of source register in target register*/
+        z80_state.gp[t_reg] = z80_state.gp[s_reg];
 
-        /* LD r, n */
-        } else if ((operand_1 & 0xC7) == 0x06) {
-            /* Load second operand from memory */
-            operand_2 = z80_fetch_byte();
+    /* LD r, n */
+    } else if ((operand_1 & 0xC7) == 0x06) {
+        /* Load second operand from memory */
+        operand_2 = z80_fetch_byte();
 
-            /* Determine target register */
-            t_reg = z80_get_t_reg(operand_1);
+        /* Determine target register */
+        t_reg = z80_get_t_reg(operand_1);
 
-            /* Store operand_2 in target register */
-            z80_state.gp[t_reg] = operand_2;
+        /* Store operand_2 in target register */
+        z80_state.gp[t_reg] = operand_2;
 
-        /* LD r, (HL) */
-        } else if ((operand_1 & 0xC7) == 0x46) {
+    /* LD r, (HL) */
+    } else if ((operand_1 & 0xC7) == 0x46) {
 
-            t_reg = z80_get_t_reg(operand_1);
+        t_reg = z80_get_t_reg(operand_1);
 
-            operand_2 = z80_fetch_byte();
-            if (!z80_ram_valid(operand_2)) {
-                printf("Unkown source RAM address %u for LD instruction\n",
-                        operand_2);
-            }
-            z80_state.gp[t_reg] = z80_state.ram[operand_2];
+        s_reg = ((z80_state.gp[4] << 8) & z80_state.gp[5]);
 
-        /* LD r, (IX+d) */
-        } else if (operand_1 == 0xDD) {
-            operand_2 = z80_fetch_byte();
-            t_reg = z80_get_t_reg(operand_2);
-            operand_3 = z80_fetch_byte();
-
-            z80_state.gp[t_reg] = (z80_state.ix + operand_3);
-
-        /* LD r, (IY+d) */
-        } else if (operand_1 == 0xFD) {
-            operand_2 = z80_fetch_byte();
-            t_reg = z80_get_t_reg(operand_2);
-            operand_3 = z80_fetch_byte();
-
-            z80_state.gp[t_reg] = (z80_state.iy + operand_3);
-
-        /* LD (HL), r */
-        } else if((operand_1 & 0xF8) == 0x70) {
+        operand_2 = z80_fetch_byte();
+        if (!z80_ram_valid(operand_2)) {
+            printf("Unkown source RAM address %u for LD instruction\n",
+                    operand_2);
         }
+        z80_state.gp[t_reg] = z80_state.ram[operand_2];
 
-        break;
-    case 0x0:
-        break;
-    }
+    /* LD r, (IX+d) */
+    } else if (operand_1 == 0xDD) {
+        operand_2 = z80_fetch_byte();
+        t_reg = z80_get_t_reg(operand_2);
+        operand_3 = z80_fetch_byte();
 
-        /* Block Transfer and Search */
-        /* Arithmetic and Logical */
-        /* Rotate and Shift */
-        /* Bit Manipulation (Set, Reset, Test) */
-        /* Jump, Call, and Return */
-        /* Input/Output */
-        /* Basic CPU Control */
+        z80_state.gp[t_reg] = (z80_state.ix + operand_3);
+
+    /* LD r, (IY+d) */
+    } else if (operand_1 == 0xFD) {
+        operand_2 = z80_fetch_byte();
+        t_reg = z80_get_t_reg(operand_2);
+        operand_3 = z80_fetch_byte();
+
+        z80_state.gp[t_reg] = (z80_state.iy + operand_3);
+
+    /* LD (HL), r */
+    } else if ((operand_1 & 0xF8) == 0x70) {
+    } else if (operand_1 == 0xDD) {
+        operand_2 = z80_fetch_byte();
+        /* LD (IX+d), r */
+        if ((operand_2 & 0xF8) == 0x70) {
+        /* LD (IX+d), n */
+        } else if (operand_2 == 0x36) {
+        /* LD IX, nn */
+        } else if (operand_2 == 0x21) {
+        /* LD IX, (nn) */
+        } else if (operand_2 == 0x2A) {
+        /* LD (nn), IX */
+        } else if (operand_2 == 0x22) {
+        /* LD SP, IX */
+        } else if (operand_2 == 0xF9) {
+        /* PUSH IX */
+        } else if (operand_2 == 0xE5) {
+        /* POP IX */
+        } else if (operand_2 == 0xE1) {
+        }
+    } else if(operand_1 == 0xFD) {
+        operand_2 = z80_fetch_byte();
+        /* LD (IY+d), r*/
+        if((operand_2 & 0xF8) == 0x70) {
+        /* LD (IY+d), n */
+        } else if (operand_2 == 0x36) {
+        /* LD IY, nn */
+        } else if (operand_2 == 0x21) {
+        /* LD IY, (nn) */
+        } else if (operand_2 == 0x2A) {
+        /* LD (nn), IY */
+        } else if (operand_2 == 0x22) {
+        /* LD SP, IY */
+        } else if (operand_2 == 0xF9) {
+        /* PUSH IY */
+        } else if (operand_2 == 0xE5) {
+        /* POP IY */
+        } else if (operand_2 == 0xE1) {
+        }
+    /* LD (HL), n */
+    } else if (operand_1 == 0x36) {
+    /* LD A, (BC) */
+    } else if (operand_1 == 0x0A) {
+    /* LD A, (DE) */
+    } else if (operand_1 == 0x1A) {
+    /* LD A, (nn) */
+    } else if (operand_1 == 0x3A) {
+    /* LD (BC), A */
+    } else if (operand_1 == 0x02) {
+    /* LD (DE), A */
+    } else if (operand_1 == 0x12) {
+    /* LD (nn), A */
+    } else if (operand_1 == 0x32) {
+    } else if (operand_1 == 0xED) {
+        operand_2 = z80_fetch_byte();
+        /* LD A, I */
+        if (operand_2 == 0x57) {
+        /* LD A, R */
+        } else if (operand_2 == 0x5F) {
+        /* LD I, A */
+        } else if (operand_2 == 0x47) {
+        /* LD R, A */
+        } else if (operand_2 == 0x4F) {
+        /* LD dd, (nn) */
+        } else if ((operand_2 & 0xCF) == 0x4B) {
+        /* LD (nn), dd */
+        } else if ((operand_2 & 0xCF) == 0x43) {
+        }
+    /* LD dd, nn */
+    } else if ((operand_1 & 0xCF) == 0x1) {
+    /* LD HL, (nn) */
+    } else if (operand_1 == 0x2A) {
+    /* LD (nn), HL */
+    } else if (operand_1 == 0x22) {
+    /* LD SP, HL */
+    } else if (operand_1 == 0xF9) {
+    /* PUSH qq */
+    } else if ((operand_1 & 0xCF) == 0xC5) {
+    /* POP qq */
+    } else if ((operand_1 & 0xCF) == 0xC1) {
+    /* Block Transfer and Search */
+    
+    /* EX DE, HL */
+    
+    /* EX AF, AF' */
+    
+    /* EXX */
+    
+    /* EX (SP), HL */
+    
+    /* EX (SP), IX */
+    
+    /* EX (SP), IY */
+    
+    /* LDI */
+    
+    /* LDIR */
+    
+    /* LDD */
+    
+    /* LDDR */
+    
+    /* CPI */
+    
+    /* CPIR */
+    
+    /* CPD */
+    
+    /* CPDR */
+
+    /* Arithmetic and Logical */
+    /* ADD A, r */
+    /* ADD A, n */
+    /* ADD A, (HL) */
+    /* ADD A, (IX+d) */
+    /* ADD A, (IY+d) */
+    /* ADC A, s */
+    /* SUB s */
+    /* SBC A, s */
+    /* AND s */
+    /* OR s */
+    /* XOR s */
+    /* CP s*/
+    /* INC r */
+    /* INC (HL) */
+    /* INC (IX+d) */
+    /* INC (IY+d) */
+    /* DEC m */
+
+    /* DAA */
+    /* CPL */
+    /* NEG */
+    /* CCF */
+    /* SCF */
+    /* NOP */
+    /* HALT */
+    /* DI */
+    /* EI */
+    /* IM 0 */
+    /* IM 1 */
+    /* IM 2 */
+
+    /* ADD HL, ss */
+    /* ADC HL, ss */
+    /* SBC HL, ss */
+    /* ADD IX, pp */
+    /* ADD IY, rr */
+    /* INC ss */
+    /* INC IX */
+    /* INC IY */
+    /* DEC ss */
+    /* DEC IX */
+    /* DEC IY */
+
+    /* Rotate and Shift */
+    /* RLCA */
+    /* RLA */
+    /* RLCA */
+    /* RRA */
+    /* RLC r */
+    /* RLC (HL) */
+    /* RLC (IX+d) */
+    /* RLC (IY+d) */
+    /* RL m */
+    /* RRC m */
+    /* RR m */
+    /* SLA m */
+    /* SRA m */
+    /* SRL m */
+    /* RLD */
+    /* RRD */
+
+    /* Bit Manipulation (Set, Reset, Test) */
+    /* BIT b, r */
+    /* BIT b, (HL) */
+    /* BIT b, (IX+d) */
+    /* BIT b, (IY+d) */
+    /* SET b, r */
+    /* SET b, (HL) */
+    /* SET b, (IX+d) */
+    /* SET b, (IY+d) */
+    /* RES b, m */
+
+    /* Jump, Call, and Return */
+    /* JP nn */
+    /* JP cc, nn */
+    /* JR e */
+    /* JR C, e */
+    /* JR NC, e */
+    /* JR Z, e */
+    /* JR NZ, e */
+    /* JP (HL) */
+    /* JP (IX) */
+    /* JP (IY) */
+    /* DJNZ, e */
+    /* CALL nn */
+    /* CALL cc, nn */
+    /* RET */
+    /* RET cc */
+    /* RETI */
+    /* RETN */
+    /*RST p */
+
+    /* Input/Output */
+    /* IN A, (n) */
+    /* IN r (C)*/
+    /* INI */
+    /* INIR */
+    /* IND */
+    /* INDR */
+    /* OUT (n), A */
+    /* OUT (C), r */
+    /* OUTI */
+    /* OTIR */
+    /* OUTD */
+    /* OTDR */
+
 }
 

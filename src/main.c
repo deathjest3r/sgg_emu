@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         printf("Could not load rom from %s\n", rom_path);
         return -1;
     }
-    
+
     /* Setup system state */
     z80_init();
     z80_graphics_init();
