@@ -84,7 +84,7 @@ uint8_t z80_get_s_reg(uint8_t operand) {
     return s_reg;
 }
 
-int z80_ram_valid(uint8_t value) {
+int z80_ram_valid(uint16_t value) {
     if (value >= RAM_SZ) {
         return 0;
     }
@@ -378,6 +378,7 @@ void z80_decode_inst() {
     /* OTIR */
     /* OUTD */
     /* OTDR */
+    }
 
 }
 

@@ -26,8 +26,10 @@
 
 int main(int argc, char** argv) {
     const char* rom_path = "rom/mega_man.gg";
-
     uint8_t* rom_ptr = loader_load_rom(rom_path);
+
+    (void)argc; (void)argv;
+
     if (rom_ptr == NULL) {
         printf("Could not load rom from %s\n", rom_path);
         return -1;

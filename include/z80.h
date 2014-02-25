@@ -29,7 +29,7 @@ void z80_graphics_init(void);
 void z80_emulate_cycle(void);
 
 int z80_gp_valid(uint8_t);
-int z80_ram_valid(uint8_t);
+int z80_ram_valid(uint16_t);
 
 uint8_t z80_get_t_reg(uint8_t);
 uint8_t z80_get_s_reg(uint8_t);
