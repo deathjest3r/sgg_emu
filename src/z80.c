@@ -107,7 +107,7 @@ uint8_t z80_fetch_byte(void) {
  */
 void z80_decode_inst() {
     uint8_t operand_1, operand_2, operand_3;
-    uint8_t s_reg, t_reg;
+    uint16_t s_reg, t_reg;
 
     operand_1 = z80_fetch_byte();
 
