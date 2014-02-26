@@ -162,6 +162,15 @@ void z80_decode_inst() {
 
     /* LD (HL), r */
     } else if ((operand_1 & 0xF8) == 0x70) {
+
+        t_reg = ((z80_state.gp[4] << 8) & z80_state.gp[5]);
+
+        if(!z80_ram_valid(t_reg)) {
+            printf("Unknown target RAM address %d for LD instruction\n",
+                    t_reg);
+        }
+        z80_state.ram[t_reg] = z80_get_s_reg(operand_1);
+
     } else if (operand_1 == 0xDD) {
         operand_2 = z80_fetch_byte();
         /* LD (IX+d), r */
