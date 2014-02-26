@@ -138,12 +138,11 @@ void z80_decode_inst() {
 
         s_reg = ((z80_state.gp[4] << 8) & z80_state.gp[5]);
 
-        operand_2 = z80_fetch_byte();
-        if (!z80_ram_valid(operand_2)) {
+        if (!z80_ram_valid(s_reg)) {
             printf("Unkown source RAM address %u for LD instruction\n",
-                    operand_2);
+                    s_reg);
         }
-        z80_state.gp[t_reg] = z80_state.ram[operand_2];
+        z80_state.gp[t_reg] = z80_state.ram[s_reg];
 
     /* LD r, (IX+d) */
     } else if (operand_1 == 0xDD) {
