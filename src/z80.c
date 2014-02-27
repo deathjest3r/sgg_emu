@@ -144,7 +144,7 @@ void z80_decode_inst() {
         }
         z80_state.gp[t_reg] = z80_state.ram[s_reg];
 
-    /* LD r, (IX+d) */
+    /* TODO: LD r, (IX+d) */
     } else if (operand_1 == 0xDD) {
         operand_2 = z80_fetch_byte();
         t_reg = z80_get_t_reg(operand_2);
@@ -152,7 +152,7 @@ void z80_decode_inst() {
 
         z80_state.gp[t_reg] = (z80_state.ix + operand_3);
 
-    /* LD r, (IY+d) */
+    /* TODO: LD r, (IY+d) */
     } else if (operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
         t_reg = z80_get_t_reg(operand_2);
@@ -172,10 +172,30 @@ void z80_decode_inst() {
 
     } else if (operand_1 == 0xDD) {
         operand_2 = z80_fetch_byte();
-        /* LD (IX+d), r */
+        /* TODO: LD (IX+d), r */
         if ((operand_2 & 0xF8) == 0x70) {
-        /* LD (IX+d), n */
+            s_reg = z80_get_s_reg(operand_2);
+            operand_3 = z80_fetch_byte();
+            t_reg = z80_state.ix + operand_3;
+
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    t_reg);
+            }
+            z80_state.ram[t_reg] = z80_state.gp[s_reg];
+
+        /* TODO: LD (IX+d), n */
         } else if (operand_2 == 0x36) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+            t_reg = z80_state.ix + operand_3;
+
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    t_reg);
+            }
+            z80_state.ram[t_reg] = operand_4;
+
         /* LD IX, nn */
         } else if (operand_2 == 0x21) {
         /* LD IX, (nn) */
@@ -191,10 +211,29 @@ void z80_decode_inst() {
         }
     } else if(operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
-        /* LD (IY+d), r*/
+        /* TODO: LD (IY+d), r*/
         if((operand_2 & 0xF8) == 0x70) {
-        /* LD (IY+d), n */
+            s_reg = z80_get_s_reg(operand_2);
+            operand_3 = z80_fetch_byte();
+            t_reg = z80_state.iy + operand_3;
+
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    t_reg);
+            }
+            z80_state.ram[t_reg] = z80_state.gp[s_reg];
+        /* TODO: LD (IY+d), n */
         } else if (operand_2 == 0x36) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+            t_reg = z80_state.iy + operand_3;
+
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    t_reg);
+            }
+            z80_state.ram[t_reg] = operand_4;
+
         /* LD IY, nn */
         } else if (operand_2 == 0x21) {
         /* LD IY, (nn) */
@@ -210,10 +249,34 @@ void z80_decode_inst() {
         }
     /* LD (HL), n */
     } else if (operand_1 == 0x36) {
+        operand_2 = z80_fetch_byte();
+        t_reg = ((z80_state.gp[reg_H] << 8) & z80_state.gp[reg_L]);
+
+        if(!z80_ram_valid(t_reg)) {
+            printf("Unknown target RAM address %d for LD instruction\n",
+                    t_reg);
+        }
+        z80_state.ram[t_reg] = operand_2;
+
     /* LD A, (BC) */
     } else if (operand_1 == 0x0A) {
+        s_reg = ((z80_state.gp[reg_B] << 8) & z80_state.gp[reg_C]);
+        if(!z80_ram_valid(s_reg)) {
+            printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+        }
+        /* Load memory from BC into accumulator */
+        z80_state.acc = z80_state.ram[s_reg];
+
     /* LD A, (DE) */
     } else if (operand_1 == 0x1A) {
+        s_reg = ((z80_state.gp[reg_D] << 8) & z80_state.gp[reg_E]);
+        if(!z80_ram_valid(s_reg)) {
+            printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+        }
+        /* Load memory from BC into accumulator */
+        z80_state.acc = z80_state.ram[s_reg];
     /* LD A, (nn) */
     } else if (operand_1 == 0x3A) {
     /* LD (BC), A */
