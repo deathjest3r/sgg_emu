@@ -29,4 +29,11 @@
 #define H 0x4 /*100*/
 #define L 0x5 /*101*/
 
+#define reg_B   0
+#define reg_C   1
+#define reg_D   2
+#define reg_E   3
+#define reg_H   4
+#define reg_L   5
+
 #endif /*__ENCODING_H__*/
