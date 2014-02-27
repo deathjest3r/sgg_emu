@@ -136,7 +136,7 @@ void z80_decode_inst() {
 
         t_reg = z80_get_t_reg(operand_1);
 
-        s_reg = ((z80_state.gp[4] << 8) & z80_state.gp[5]);
+        s_reg = ((z80_state.gp[reg_H] << 8) & z80_state.gp[reg_L]);
 
         if (!z80_ram_valid(s_reg)) {
             printf("Unkown source RAM address %u for LD instruction\n",
@@ -162,8 +162,7 @@ void z80_decode_inst() {
 
     /* LD (HL), r */
     } else if ((operand_1 & 0xF8) == 0x70) {
-
-        t_reg = ((z80_state.gp[4] << 8) & z80_state.gp[5]);
+        t_reg = ((z80_state.gp[reg_H] << 8) & z80_state.gp[reg_L]);
 
         if(!z80_ram_valid(t_reg)) {
             printf("Unknown target RAM address %d for LD instruction\n",
