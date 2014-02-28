@@ -18,8 +18,24 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 CC=gcc
+LD=gcc
 CFLAGS=-ansi -Wall -Wextra -Werror -pedantic
+LDFLAGS =
+LDLIBS=SDL2
+SRC=src/graphics.c \
+	src/operations.c \
+	src/loader.c \
+	src/z80.c \
+	src/main.c
+PROG=sgg_emu
 
-all:
+all: $(PROG)
+
+$(PROG): main.o
+	$(LD) $(LDFLAGS) -l$(LDLIBS) *.o -o $(PROG)
+
+main.o:
 	cd src
-	$(CC) $(CFLAGS) src/main.c src/loader.c src/z80.c -o sgg_emu	
+	$(CC) $(CFLAGS) -c $(SRC)
+clean:
+	rm *.o sgg_emu
