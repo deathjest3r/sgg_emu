@@ -23,6 +23,7 @@
 
 #include "../include/z80.h"
 #include "../include/loader.h"
+#include "../include/graphics.h"
 
 int main(int argc, char** argv) {
     const char* rom_path = "rom/mega_man.gg";
@@ -37,7 +38,8 @@ int main(int argc, char** argv) {
 
     /* Setup system state */
     z80_init();
-    z80_graphics_init();
+    /* Init graphic subsystem of Game Gear */
+    gg_screen_init();
 
     /* Main system loop */
     /*while(1) {
