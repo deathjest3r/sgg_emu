@@ -19,7 +19,7 @@
 #
 CC=gcc
 LD=gcc
-CFLAGS=-ansi -Wall -Wextra -Werror -pedantic
+CFLAGS=-std=gnu99 -Wall -Wextra -Werror -pedantic
 LDFLAGS =
 LDLIBS=SDL2
 SRC=src/graphics.c \
