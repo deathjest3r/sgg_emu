@@ -49,10 +49,6 @@ void z80_emulate_cycle(void) {
     return;
 }
 
-void z80_graphics_init(void) {
-    return;
-}
-
 void z80_init(void) {
     /* Set PC to first address in RAM */
     z80_state.pc = z80_state.ram[0];
