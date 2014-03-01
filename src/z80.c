@@ -199,16 +199,98 @@ void z80_decode_inst() {
 
         /* LD IX, nn */
         } else if (operand_2 == 0x21) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+            z80_state.ix = ((operand_4 << 8) | operand_3);
+
         /* LD IX, (nn) */
         } else if (operand_2 == 0x2A) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+            s_reg = ((operand_4 << 8) | operand_3);
+
+            if(!z80_ram_valid(s_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+
+            /* Get nn+1 to get the second value for the high 8bits of IX */
+            t_reg = s_reg + 1;
+
+            /* Check if the loaded address is valid position in ram */
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+
+            z80_state.ix = (z80_state.ram[t_reg] << 8) | z80_state.ram[s_reg];
+
         /* LD (nn), IX */
         } else if (operand_2 == 0x22) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+
+            s_reg = ((operand_4 << 8) | operand_3);
+
+            if(!z80_ram_valid(s_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+
+            /* Get nn+1 */
+            t_reg = s_reg + 1;
+
+            /* Check if the loaded address is valid position in ram */
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+            /* Mask out upper 8bits of the ix and write to memory */
+            z80_state.ram[s_reg] = (uint8_t) z80_state.ix;
+            /* Shift high bits to right and write to memory */
+            z80_state.ram[t_reg] = (uint8_t) (z80_state.ix >> 8);
+
         /* LD SP, IX */
         } else if (operand_2 == 0xF9) {
+            z80_state.sp = z80_state.ix;
+
         /* PUSH IX */
         } else if (operand_2 == 0xE5) {
+            z80_state.sp--;
+
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for PUSH IX \
+                        instruction\n", z80_state.sp);
+            }
+
+            z80_state.ram[z80_state.sp] = (uint8_t) (z80_state.ix >> 8);
+            z80_state.sp--;
+
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for PUSH IX \
+                        instruction\n", z80_state.sp);
+            }
+            z80_state.ram[z80_state.sp] = (uint8_t) z80_state.ix;
+
         /* POP IX */
         } else if (operand_2 == 0xE1) {
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for POP IX \
+                        instruction\n", z80_state.sp);
+            }
+
+            /* Load low order byte of IX with value of sp position */
+            z80_state.ix = z80_state.ram[z80_state.sp];
+            z80_state.sp++;
+
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for POP IX \
+                        instruction\n", z80_state.sp);
+            }
+
+            /* load high order byte of IX with value of sp position */
+            z80_state.ix = z80_state.ix | (z80_state.ram[z80_state.sp] << 8);
+            z80_state.sp++;
         }
     } else if(operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
@@ -237,16 +319,98 @@ void z80_decode_inst() {
 
         /* LD IY, nn */
         } else if (operand_2 == 0x21) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+            z80_state.iy = ((operand_4 << 8) | operand_3);
+
         /* LD IY, (nn) */
         } else if (operand_2 == 0x2A) {
+             operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+            s_reg = ((operand_4 << 8) | operand_3);
+
+            if(!z80_ram_valid(s_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+
+            /* Get nn+1 to get the second value for the high 8bits of IX */
+            t_reg = s_reg + 1;
+
+            /* Check if the loaded address is valid position in ram */
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+
+            z80_state.iy = (z80_state.ram[t_reg] << 8) | z80_state.ram[s_reg];
+
         /* LD (nn), IY */
         } else if (operand_2 == 0x22) {
+            operand_3 = z80_fetch_byte();
+            operand_4 = z80_fetch_byte();
+
+            s_reg = ((operand_4 << 8) | operand_3);
+
+            if(!z80_ram_valid(s_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+
+            /* Get nn+1 */
+            t_reg = s_reg + 1;
+
+            /* Check if the loaded address is valid position in ram */
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for LD instruction\n",
+                    s_reg);
+            }
+            /* Mask out upper 8bits of the ix and write to memory */
+            z80_state.ram[s_reg] = (uint8_t) z80_state.iy;
+            /* Shift high bits to right and write to memory */
+            z80_state.ram[t_reg] = (uint8_t) (z80_state.iy >> 8);
+
         /* LD SP, IY */
         } else if (operand_2 == 0xF9) {
+            z80_state.sp = z80_state.iy;
+
         /* PUSH IY */
         } else if (operand_2 == 0xE5) {
+            z80_state.sp--;
+
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for PUSH IX \
+                        instruction\n", z80_state.sp);
+            }
+
+            z80_state.ram[z80_state.sp] = (uint8_t) (z80_state.ix >> 8);
+            z80_state.sp--;
+
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for PUSH IX \
+                        instruction\n", z80_state.sp);
+            }
+            z80_state.ram[z80_state.sp] = (uint8_t) z80_state.iy;
+
         /* POP IY */
         } else if (operand_2 == 0xE1) {
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for POP IX \
+                        instruction\n", z80_state.sp);
+            }
+
+            /* Load low order byte of IX with value of sp position */
+            z80_state.iy = z80_state.ram[z80_state.sp];
+            z80_state.sp++;
+
+            if(!z80_ram_valid(z80_state.sp)) {
+                printf("Unknown target RAM address %d for POP IX \
+                        instruction\n", z80_state.sp);
+            }
+
+            /* load high order byte of IX with value of sp position */
+            z80_state.iy = z80_state.iy | (z80_state.ram[z80_state.sp] << 8);
+            z80_state.sp++;
         }
     /* LD (HL), n */
     } else if (operand_1 == 0x36) {
