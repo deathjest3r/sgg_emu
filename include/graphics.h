@@ -22,10 +22,11 @@
 #define __GRAPHICS_H__
 
 /* Game Gears display resolution */
-#define WIDTH   160
-#define HEIGHT  144
-#define DEPTH   4
+#define GG_WIDTH   160
+#define GG_HEIGHT  144
+#define GG_DEPTH   4
 
-void gg_screen_init(void);
+void gg_graphics_init(void);
+void gg_graphics_destroy(void);
 
 #endif /*__GRAPHICS_H__*/

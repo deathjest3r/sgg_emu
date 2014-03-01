@@ -22,18 +22,34 @@
 
 #include "../include/graphics.h"
 
-void gg_screen_init() {
-    SDL_Window *win = NULL;
+SDL_Window *G_window = NULL;
+SDL_Renderer *G_renderer = NULL;
+
+void gg_graphics_init() {
 
      if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
         printf("%s\n", SDL_GetError());
         return;
     }
 
-    win = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
-    if (win == NULL) {
+    G_window = SDL_CreateWindow("SGGEmu", 100, 100, GG_WIDTH, GG_HEIGHT, SDL_WINDOW_SHOWN);
+    if (G_window == NULL) {
         printf("%s\n", SDL_GetError());
         return;
     }
+
+    G_renderer = SDL_CreateRenderer(G_window, -1,
+            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (G_renderer == NULL) {
+        printf("%s\n", SDL_GetError());
+        return;
+    }
+
+    SDL_Delay(2000);
 }
 
+void gg_graphics_destroy() {
+    SDL_DestroyRenderer(G_renderer);
+    SDL_DestroyWindow(G_window);
+    SDL_Quit();
+}
