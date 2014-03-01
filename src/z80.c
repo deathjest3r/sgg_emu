@@ -144,21 +144,22 @@ void z80_decode_inst() {
         }
         z80_state.gp[t_reg] = z80_state.ram[s_reg];
 
-    /* TODO: LD r, (IX+d) */
+    /* LD r, (IX+d) */
     } else if (operand_1 == 0xDD) {
         operand_2 = z80_fetch_byte();
         t_reg = z80_get_t_reg(operand_2);
         operand_3 = z80_fetch_byte();
 
-        z80_state.gp[t_reg] = (z80_state.ix + operand_3);
+        z80_state.gp[t_reg] = (z80_state.ix + (int8_t)operand_3);
 
-    /* TODO: LD r, (IY+d) */
+    /* LD r, (IY+d) */
     } else if (operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
         t_reg = z80_get_t_reg(operand_2);
         operand_3 = z80_fetch_byte();
 
-        z80_state.gp[t_reg] = (z80_state.iy + operand_3);
+        /* Cast operand_3 to signed because it's in twos complement */
+        z80_state.gp[t_reg] = (z80_state.iy + (int8_t)operand_3);
 
     /* LD (HL), r */
     } else if ((operand_1 & 0xF8) == 0x70) {
@@ -172,11 +173,11 @@ void z80_decode_inst() {
 
     } else if (operand_1 == 0xDD) {
         operand_2 = z80_fetch_byte();
-        /* TODO: LD (IX+d), r */
+        /* LD (IX+d), r */
         if ((operand_2 & 0xF8) == 0x70) {
             s_reg = z80_get_s_reg(operand_2);
             operand_3 = z80_fetch_byte();
-            t_reg = z80_state.ix + operand_3;
+            t_reg = z80_state.ix + (int8_t)operand_3;
 
             if(!z80_ram_valid(t_reg)) {
                 printf("Unknown target RAM address %d for LD instruction\n",
@@ -184,11 +185,11 @@ void z80_decode_inst() {
             }
             z80_state.ram[t_reg] = z80_state.gp[s_reg];
 
-        /* TODO: LD (IX+d), n */
+        /* LD (IX+d), n */
         } else if (operand_2 == 0x36) {
             operand_3 = z80_fetch_byte();
             operand_4 = z80_fetch_byte();
-            t_reg = z80_state.ix + operand_3;
+            t_reg = z80_state.ix + (int8_t)operand_3;
 
             if(!z80_ram_valid(t_reg)) {
                 printf("Unknown target RAM address %d for LD instruction\n",
@@ -211,22 +212,22 @@ void z80_decode_inst() {
         }
     } else if(operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
-        /* TODO: LD (IY+d), r*/
+        /* LD (IY+d), r*/
         if((operand_2 & 0xF8) == 0x70) {
             s_reg = z80_get_s_reg(operand_2);
             operand_3 = z80_fetch_byte();
-            t_reg = z80_state.iy + operand_3;
+            t_reg = z80_state.iy + (int8_t)operand_3;
 
             if(!z80_ram_valid(t_reg)) {
                 printf("Unknown target RAM address %d for LD instruction\n",
                     t_reg);
             }
             z80_state.ram[t_reg] = z80_state.gp[s_reg];
-        /* TODO: LD (IY+d), n */
+        /* LD (IY+d), n */
         } else if (operand_2 == 0x36) {
             operand_3 = z80_fetch_byte();
             operand_4 = z80_fetch_byte();
-            t_reg = z80_state.iy + operand_3;
+            t_reg = z80_state.iy + (int8_t)operand_3;
 
             if(!z80_ram_valid(t_reg)) {
                 printf("Unknown target RAM address %d for LD instruction\n",
