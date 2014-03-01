@@ -27,7 +27,7 @@
 uint8_t* loader_load_rom(const char* path) {
     uint8_t rom_buffer[2048];
     size_t blocks = 0;
-    
+
     FILE* rom_fd = fopen(path, "r");
     if (rom_fd == NULL) {
         printf("Could not open file: %s\n", path);
