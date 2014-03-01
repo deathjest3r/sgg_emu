@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #include <SDL2/SDL.h>
 
@@ -31,14 +32,27 @@
 extern SDL_Window *G_window;
 extern SDL_Renderer *G_renderer;
 
-int main(int argc, char** argv) {
+static void show_help(char* app_name) {
+    printf("%s -r <rom file>\n", app_name);
+}
+
+int main(int argc, char* argv[]) {
     SDL_Event e;
+    int c;
     bool quit = false;
     const char* rom_path = "rom/mega_man.gg";
-    uint8_t* rom_ptr = loader_load_rom(rom_path);
+    uint8_t* rom_ptr = NULL;
 
-    (void)argc; (void)argv;
+    while ((c = getopt(argc, argv, "h?")) != -1) {
+        switch (c) {
+        case 'h':
+        case '?':
+        default:
+            show_help(argv[0]);
+        }
+    }
 
+    rom_ptr = loader_load_rom(rom_path);
     if (rom_ptr == NULL) {
         printf("Could not load rom from %s\n", rom_path);
         /*return -1;*/
