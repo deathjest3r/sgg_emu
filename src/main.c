@@ -22,6 +22,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include <SDL2/SDL.h>
+
 #include "../include/z80.h"
 #include "../include/loader.h"
 #include "../include/graphics.h"
