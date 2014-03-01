@@ -36,4 +36,11 @@
 #define reg_H   4
 #define reg_L   5
 
+/* Elements in the flag register */
+#define CARRY_FLAG              0 /*C*/
+#define ADDSUB_FLAG             1 /*N*/
+#define PARITY_OVERFLOW_FLAG    2 /*P/V*/
+#define ZERO_FLAG               6 /*Z*/
+#define SIGN_FLAG               7 /*S*/
+
 #endif /*__ENCODING_H__*/
