@@ -148,14 +148,6 @@ void z80_decode_inst() {
         }
         z80_state.gp[t_reg] = z80_state.ram[s_reg];
 
-    /* LD r, (IX+d) */
-    } else if (operand_1 == 0xDD) {
-        operand_2 = z80_fetch_byte();
-        t_reg = z80_get_t_reg(operand_2);
-        operand_3 = z80_fetch_byte();
-
-        z80_state.gp[t_reg] = (z80_state.ix + (int8_t)operand_3);
-
     /* LD r, (IY+d) */
     } else if (operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
@@ -177,8 +169,16 @@ void z80_decode_inst() {
 
     } else if (operand_1 == 0xDD) {
         operand_2 = z80_fetch_byte();
+
+        if ((operand_2 & 0xC7) == 0x46) {
+            operand_2 = z80_fetch_byte();
+            t_reg = z80_get_t_reg(operand_2);
+            operand_3 = z80_fetch_byte();
+
+            z80_state.gp[t_reg] = (z80_state.ix + (int8_t)operand_3);
+
         /* LD (IX+d), r */
-        if ((operand_2 & 0xF8) == 0x70) {
+        } else if ((operand_2 & 0xF8) == 0x70) {
             s_reg = z80_get_s_reg(operand_2);
             operand_3 = z80_fetch_byte();
             t_reg = z80_state.ix + (int8_t)operand_3;
