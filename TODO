@@ -1,0 +1,8 @@
+TODO List
+*********
+
+- Implemente all instructions of the Z80
+- Emulate keyboard input
+- Implement the graphics stuff with SDL
+- Implement the command line parser
+- Fishish the implementation of the cartridge loader
