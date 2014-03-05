@@ -64,6 +64,12 @@ int z80_gp_valid(uint8_t reg) {
     return 1;
 }
 
+void z80_reg_swap(uint8_t* reg_a, uint8_t* reg_b) {
+    uint8_t tmp = reg_a;
+    *reg_a = *reg_b;
+    *reg_b = tmp;
+}
+
 uint8_t z80_get_t_reg(uint8_t operand) {
     uint8_t t_reg = (operand & 0x38) >> 3;
     if (!z80_gp_valid(t_reg)) {

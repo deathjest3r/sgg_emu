@@ -34,4 +34,6 @@ uint8_t z80_get_t_reg(uint8_t);
 uint8_t z80_get_s_reg(uint8_t);
 uint8_t z80_fetch_instruction(void);
 
+void z80_reg_swap(uint8_t*, uint8_t*);
+
 #endif /*__Z_80_H__*/
