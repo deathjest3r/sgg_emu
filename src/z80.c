@@ -31,6 +31,8 @@ struct Z80_State {
     uint8_t gp[12]; /* General Purpose Registers */
     uint8_t acc;    /* Accumulator */
     uint8_t flags;  /* Flags register */
+    uint8_t acc_;   /* A' */
+    uint8_t flags_; /* F' */
     uint8_t r;      /* Memory Refresh */
     uint8_t i;      /* Interrupt Vector */
     uint16_t ix;    /* Index Register */

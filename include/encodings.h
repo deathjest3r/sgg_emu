@@ -35,6 +35,12 @@
 #define reg_E   3
 #define reg_H   4
 #define reg_L   5
+#define reg_B_  6
+#define reg_C_  7
+#define reg_D_  8
+#define reg_E_  9
+#define reg_H_  10
+#define reg_L_  11
 
 /* Elements in the flag register */
 #define CARRY_FLAG              0 /*C*/
