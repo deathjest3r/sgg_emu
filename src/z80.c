@@ -295,6 +295,29 @@ void z80_decode_inst() {
             /* load high order byte of IX with value of sp position */
             z80_state.ix = z80_state.ix | (z80_state.ram[z80_state.sp] << 8);
             z80_state.sp++;
+
+        /* EX (SP), IX */
+        } else if (operand_2 == 0xE3) {
+            s_reg = z80_state.sp;
+            t_reg = z80_state.sp+1;
+
+            if(!z80_ram_valid(s_reg)) {
+                printf("Unknown target RAM address %d for PUSH qq \
+                        instruction\n", s_reg);
+            }
+
+            if(!z80_ram_valid(t_reg)) {
+                printf("Unknown target RAM address %d for PUSH qq \
+                        instruction\n", t_reg);
+            }
+
+            /*Missuse operands 3 and 4 to store immediate values*/
+            operand_3 = (uint8_t) z80_state.ix;
+            operand_4 = (uint8_t) (z80_state.ix >> 8);
+
+            /*TODO: This is dangerous, fix it*/
+            z80_swap_reg(&z80_state.ram[s_reg], &operand_3);
+            z80_swap_reg(&z80_state.ram[t_reg], &operand_4);
         }
     } else if(operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
@@ -663,15 +686,44 @@ void z80_decode_inst() {
         }
 
     /* Block Transfer and Search */
-    
     /* EX DE, HL */
-    
+    } else if(operand_1 == 0xEB) {
+
+        z80_swap_reg(&z80_state.gp[reg_D], &z80_state.gp[reg_H]);
+        z80_swap_reg(&z80_state.gp[reg_E], &z80_state.gp[reg_L]);
+
     /* EX AF, AF' */
-    
+    } else if(operand_1 == 0x08) {
+        z80_swap_reg(&z80_state.acc, &z80_state.acc_);
+        z80_swap_reg(&z80_state.flags, &z80_state.flags_);
+
     /* EXX */
-    
+    } else if(operand_1 == 0xD9) {
+        z80_swap_reg(&z80_state.gp[reg_B], &z80_state.gp[reg_B_]);
+        z80_swap_reg(&z80_state.gp[reg_C], &z80_state.gp[reg_C_]);
+        z80_swap_reg(&z80_state.gp[reg_D], &z80_state.gp[reg_D_]);
+        z80_swap_reg(&z80_state.gp[reg_E], &z80_state.gp[reg_E_]);
+        z80_swap_reg(&z80_state.gp[reg_H], &z80_state.gp[reg_H_]);
+        z80_swap_reg(&z80_state.gp[reg_L], &z80_state.gp[reg_L_]);
+
     /* EX (SP), HL */
-    
+    } else if(operand_1 == 0xE3) {
+        s_reg = z80_state.sp;
+        t_reg = z80_state.sp+1;
+
+        if(!z80_ram_valid(s_reg)) {
+            printf("Unknown target RAM address %d for PUSH qq \
+                    instruction\n", s_reg);
+        }
+
+        if(!z80_ram_valid(t_reg)) {
+            printf("Unknown target RAM address %d for PUSH qq \
+                    instruction\n", t_reg);
+        }
+
+        z80_swap_reg(&z80_state.ram[s_reg], &z80_state.gp[reg_L]);
+        z80_swap_reg(&z80_state.ram[t_reg], &z80_state.gp[reg_H]);
+
     /* EX (SP), IX */
     
     /* EX (SP), IY */
