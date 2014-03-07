@@ -21,20 +21,19 @@ CC=gcc
 LD=gcc
 CFLAGS=-std=gnu99 -Wall -Wextra -Werror -pedantic
 LDFLAGS =
-LDLIBS=SDL2
-SRC=src/graphics.c \
-	src/loader.c \
-	src/z80.c \
-	src/main.c
-PROG=sgg_emu
+LDLIBS = -lSDL2
+HDR := $(wildcard include/*)
+SRC := $(wildcard src/*.c)
+OBJ := $(patsubst %.c,%.o,$(SRC))
+PROG := sgg_emu
 
 all: $(PROG)
 
-$(PROG): main.o
-	$(LD) $(LDFLAGS) -l$(LDLIBS) *.o -o $(PROG)
+$(PROG): $(OBJ)
+	$(LD) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-main.o:
-	cd src
-	$(CC) $(CFLAGS) -c $(SRC)
+$(OBJ): %.o: %.c $(HDR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -f *.o sgg_emu
+	rm -f $(OBJ) $(PROG)
