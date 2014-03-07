@@ -317,6 +317,10 @@ void z80_decode_inst() {
 
             z80_swap_reg(&z80_state.ram[s_reg], &operand_3);
             z80_swap_reg(&z80_state.ram[t_reg], &operand_4);
+
+        /* ADD A, (IX+d) */
+        } else if (operand_2 == 0x86) {
+            /* TODO: Set condition flags correctly */
         }
     } else if(operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
@@ -542,6 +546,22 @@ void z80_decode_inst() {
         } else if ((operand_2 & 0xCF) == 0x4B) {
         /* LD (nn), dd */
         } else if ((operand_2 & 0xCF) == 0x43) {
+        /* LDI */
+        } else if (operand_2 == 0xA0) {
+        /* LDIR */
+        } else if (operand_2 == 0xB0) {
+        /* LDD */
+        } else if (operand_2 == 0xA8) {
+        /* LDDR */
+        } else if (operand_2 == 0xB8) {
+        /* CPI */
+        } else if (operand_2 == 0xA1) {
+        /* CPIR */
+        } else if (operand_2 == 0xB1) {
+        /* CPD */
+        } else if (operand_2 == 0xA9) {
+        /* CPDR */
+        } else if (operand_2 == 0xB9) {
         }
     /* LD dd, nn */
     } else if ((operand_1 & 0xCF) == 0x1) {
@@ -723,46 +743,71 @@ void z80_decode_inst() {
         z80_swap_reg(&z80_state.ram[s_reg], &z80_state.gp[reg_L]);
         z80_swap_reg(&z80_state.ram[t_reg], &z80_state.gp[reg_H]);
 
-    /* EX (SP), IX */
-    
     /* EX (SP), IY */
-    
-    /* LDI */
-    
-    /* LDIR */
-    
-    /* LDD */
-    
-    /* LDDR */
-    
-    /* CPI */
-    
-    /* CPIR */
-    
-    /* CPD */
-    
-    /* CPDR */
+    } else if(1) {
 
     /* Arithmetic and Logical */
     /* ADD A, r */
-    /* ADD A, n */
-    /* ADD A, (HL) */
-    /* ADD A, (IX+d) */
-    /* ADD A, (IY+d) */
-    /* ADC A, s */
-    /* SUB s */
-    /* SBC A, s */
-    /* AND s */
-    /* OR s */
-    /* XOR s */
-    /* CP s*/
-    /* INC r */
-    /* INC (HL) */
-    /* INC (IX+d) */
-    /* INC (IY+d) */
-    /* DEC m */
+    } else if((operand_1 & 0x07) == 0x80) {
+        /* TODO: Set condition flags correctly */
+        s_reg = z80_get_s_reg(operand_1);
+        z80_state.acc += s_reg;
 
+    /* ADD A, n */
+    } else if(operand_1 == 0xC6) {
+        /* TODO: Set condition flags correctly */
+        operand_2 = z80_fetch_byte();
+        z80_state.acc += operand_2;
+
+    /* ADD A, (HL) */
+    } else if(operand_1 == 0x86) {
+        /* TODO: Set condition flags correctly */
+        s_reg = (z80_state.gp[reg_H] << 8) | z80_state.gp[reg_L];
+
+        if(!z80_ram_valid(s_reg)) {
+            printf("Unknown target RAM address %d for PUSH qq \
+                    instruction\n", s_reg);
+        }
+        z80_state.acc += z80_state.ram[s_reg];
+
+    /* ADD A, (IY+d) */
+    } else if(1) {
+    /* ADC A, s */
+    } else if(1) {
+    /* SUB r */
+    } else if((operand_1 & 0xF8) ==  0x90) {
+        /* TODO: Set condition flags correctly */
+        s_reg = z80_get_s_reg(operand_1);
+        z80_state.acc -= s_reg;
+
+    /* SUB n */
+    } else if (operand_1 == 0xD6) {
+        /* TODO: Set condition flags correctly */
+        operand_2 = z80_fetch_byte();
+        z80_state.acc -= operand_2;
+
+    /* SBC A, s */
+    } else if(1) {
+    /* AND s */
+    } else if(1) {
+    /* OR s */
+    } else if(1) {
+    /* XOR s */
+    } else if(1) {
+    /* CP s*/
+    } else if(1) {
+    /* INC r */
+    } else if(1) {
+    /* INC (HL) */
+    } else if(1) {
+    /* INC (IX+d) */
+    } else if(1) {
+    /* INC (IY+d) */
+    } else if(1) {
+    /* DEC m */
+    } else if(1) {
     /* DAA */
+    } else if(1) {
     /* CPL */
     /* NEG */
     /* CCF */
