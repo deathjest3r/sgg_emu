@@ -315,7 +315,6 @@ void z80_decode_inst() {
             operand_3 = (uint8_t) z80_state.ix;
             operand_4 = (uint8_t) (z80_state.ix >> 8);
 
-            /*TODO: This is dangerous, fix it*/
             z80_swap_reg(&z80_state.ram[s_reg], &operand_3);
             z80_swap_reg(&z80_state.ram[t_reg], &operand_4);
         }
