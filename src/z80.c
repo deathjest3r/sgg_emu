@@ -582,13 +582,15 @@ void z80_decode_inst() {
         operand_2 = z80_fetch_byte();
         /* LD A, I */
         if (operand_2 == 0x57) {
-            /* TODO: Set condition flags correctly */
             z80_state.acc = z80_state.i;
+            z80_update_flags(z80_state.i, SIGN_FLAG | ZERO_FLAG |
+                    HALFCARRY_FLAG | PARITYOVERFLOW_FLAG | ADDSUB_FLAG);
 
         /* LD A, R */
         } else if (operand_2 == 0x5F) {
-            /* TODO: Set condition flags correctly */
             z80_state.acc = z80_state.r;
+            z80_update_flags(z80_state.i, SIGN_FLAG | ZERO_FLAG |
+                    HALFCARRY_FLAG | PARITYOVERFLOW_FLAG | ADDSUB_FLAG);
 
         /* LD I, A */
         } else if (operand_2 == 0x47) {
