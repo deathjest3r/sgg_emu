@@ -41,6 +41,8 @@ struct Z80_State {
     uint16_t pc;    /* Program Counter */
     uint8_t ram[RAM_SZ];  /* 8KB RAM */
     uint8_t vram[VRAM_SZ]; /* 16KB VRAM */
+    uint8_t iff1;   /*Interrupt Enable/Disable Flip-Flop I*/
+    uint8_t iff2;   /*Interrupt Enable/Disable Flip-Flop II*/
 } z80_state;
 
 void z80_emulate_cycle(void) {
@@ -55,6 +57,60 @@ void z80_init(void) {
     /* Set PC to first address in RAM */
     z80_state.pc = z80_state.ram[0];
     return;
+}
+
+int z80_flag_set(uint8_t mask, uint8_t flag) {
+    if ((mask & flag) == flag)
+        return 1;
+    return 0;
+}
+
+void z80_update_flags(uint8_t value, uint8_t mask) {
+    if(z80_flag_set(mask, SIGN_FLAG)) {
+        /* S is set if result is negative; reset otherwise*/
+        if((value & 0x80) == 0x80)
+            z80_state.flags |= SIGN_FLAG;
+        else
+            z80_state.flags &= ~SIGN_FLAG;
+    }
+
+    if(z80_flag_set(mask, ZERO_FLAG)) {
+        /* Z is set if result is zero; reset otherwise */
+        if (value == 0)
+            z80_state.flags |= ZERO_FLAG;
+        else
+            z80_state.flags &= ~ZERO_FLAG;
+    }
+
+    if(z80_flag_set(mask, HALFCARRY_FLAG)) {
+        /* H is set if carry from bit 3; reset otherwise */
+        if((value & 0x10) == 0x10)
+            z80_state.flags |= HALFCARRY_FLAG;
+        else
+            z80_state.flags &= ~HALFCARRY_FLAG;
+    }
+
+    if(z80_flag_set(mask, ADDSUB_FLAG)) {
+        /* N is reset */
+        z80_state.flags &= ~ADDSUB_FLAG;
+    }
+
+    if(z80_flag_set(mask, PARITYOVERFLOW_FLAG)) {
+        /* Store state of iff2 in parity flag*/
+        if(z80_state.iff2)
+            z80_state.flags |= PARITYOVERFLOW_FLAG;
+        else
+            z80_state.flags &= ~PARITYOVERFLOW_FLAG;
+    }
+
+    /*TODO: Fix this!*/
+    if(z80_flag_set(mask, CARRY_FLAG)) {
+        /* C is set if carry from bit 7; reset otherwise */
+        if((value & 0x100) == 0x100)
+            z80_state.flags |= CARRY_FLAG;
+        else
+            z80_state.flags &= ~CARRY_FLAG;
+    }
 }
 
 int z80_gp_valid(uint8_t reg) {

@@ -27,6 +27,9 @@
 void z80_init(void);
 void z80_emulate_cycle(void);
 
+int z80_flag_set(uint8_t value, uint8_t flag);
+void z80_update_flags(uint8_t value, uint8_t mask);
+
 int z80_gp_valid(uint8_t);
 int z80_ram_valid(uint16_t);
 
