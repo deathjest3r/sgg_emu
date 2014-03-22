@@ -65,6 +65,28 @@ int z80_flag_set(uint8_t mask, uint8_t flag) {
     return 0;
 }
 
+int z80_condition_true(uint8_t cc) {
+    switch(cc) {
+    case 0x0: /*NZ non zero*/
+        return !(z80_state.flags & ZERO_FLAG);
+    case 0x1: /*Z zero*/
+        return (z80_state.flags & ZERO_FLAG);
+    case 0x2: /*NC no carry*/
+        return !(z80_state.flags & CARRY_FLAG);
+    case 0x3: /*C carry*/
+        return (z80_state.flags & CARRY_FLAG);
+    case 0x4: /*PO parity odd*/
+        return !(z80_state.flags & PARITYOVERFLOW_FLAG);
+    case 0x5: /*PE parity even*/
+        return (z80_state.flags & PARITYOVERFLOW_FLAG);
+    case 0x6: /*P sign positive*/
+        return !(z80_state.flags & SIGN_FLAG);
+    case 0x7: /*M sign negative*/
+        return (z80_state.flags & SIGN_FLAG);
+    }
+    return 0;
+}
+
 void z80_update_flags(uint8_t value, uint8_t mask) {
     if(z80_flag_set(mask, SIGN_FLAG)) {
         /* S is set if result is negative; reset otherwise*/
