@@ -1006,7 +1006,7 @@ void z80_decode_inst() {
         operand_2 = z80_fetch_byte();
         operand_3 = z80_fetch_byte();
 
-        if((operand_1 & 0x38 >> 3) ) {
+        if(z80_condition_true(operand_1 & 0x38 >> 3)) {
             s_reg = ((operand_3 << 8) | operand_2);
 
             if(!z80_ram_valid(s_reg)) {
@@ -1016,7 +1016,15 @@ void z80_decode_inst() {
             z80_state.pc = z80_state.ram[s_reg];
         }
     /* JR e */
-    } else if(1) {
+    } else if(operand_1 == 0x18) {
+        operand_2 = z80_fetch_byte();
+        s_reg = z80_state.pc + operand_2;
+        if(!z80_ram_valid(s_reg)) {
+            printf("Unknown target RAM address %d for JR e \
+                    instruction\n", s_reg);
+        }
+        z80_state.pc = s_reg;
+
     /* JR C, e */
     } else if(1) {
     /* JR NC, e */
