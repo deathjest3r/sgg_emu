@@ -45,7 +45,7 @@
 /* Elements in the flag register */
 #define CARRY_FLAG              0x01 /*C*/
 #define ADDSUB_FLAG             0x02 /*N*/
-#define PARITYOVERFLOW_FLAG     0x03 /*P/V*/
+#define PARITYOVERFLOW_FLAG     0x04 /*P/V*/
 #define HALFCARRY_FLAG          0x10 /*H*/
 #define ZERO_FLAG               0x40 /*Z*/
 #define SIGN_FLAG               0x80 /*S*/
