@@ -867,92 +867,190 @@ void z80_decode_inst() {
     /* DAA */
     } else if(1) {
     /* CPL */
+    } else if(1) {
     /* NEG */
+    } else if(1) {
     /* CCF */
+    } else if(1) {
     /* SCF */
+    } else if(1) {
     /* NOP */
+    } else if(1) {
     /* HALT */
+    } else if(1) {
     /* DI */
+    } else if(1) {
     /* EI */
+    } else if(1) {
     /* IM 0 */
+    } else if(1) {
     /* IM 1 */
+    } else if(1) {
     /* IM 2 */
 
     /* ADD HL, ss */
+    } else if(1) {
     /* ADC HL, ss */
+    } else if(1) {
     /* SBC HL, ss */
+    } else if(1) {
     /* ADD IX, pp */
+    } else if(1) {
     /* ADD IY, rr */
+    } else if(1) {
     /* INC ss */
+    } else if(1) {
     /* INC IX */
+    } else if(1) {
     /* INC IY */
+    } else if(1) {
     /* DEC ss */
+    } else if(1) {
     /* DEC IX */
+    } else if(1) {
     /* DEC IY */
+    } else if(1) {
 
     /* Rotate and Shift */
     /* RLCA */
+    } else if(1) {
     /* RLA */
+    } else if(1) {
     /* RLCA */
+    } else if(1) {
     /* RRA */
+    } else if(1) {
     /* RLC r */
+    } else if(1) {
     /* RLC (HL) */
+    } else if(1) {
     /* RLC (IX+d) */
+    } else if(1) {
     /* RLC (IY+d) */
+    } else if(1) {
     /* RL m */
+    } else if(1) {
     /* RRC m */
+    } else if(1) {
     /* RR m */
+    } else if(1) {
     /* SLA m */
+    } else if(1) {
     /* SRA m */
+    } else if(1) {
     /* SRL m */
+    } else if(1) {
     /* RLD */
+    } else if(1) {
     /* RRD */
+    } else if(1) {
 
     /* Bit Manipulation (Set, Reset, Test) */
     /* BIT b, r */
+    } else if(1) {
     /* BIT b, (HL) */
+    } else if(1) {
     /* BIT b, (IX+d) */
+    } else if(1) {
     /* BIT b, (IY+d) */
+    } else if(1) {
     /* SET b, r */
+    } else if(1) {
     /* SET b, (HL) */
+    } else if(1) {
     /* SET b, (IX+d) */
+    } else if(1) {
     /* SET b, (IY+d) */
+    } else if(1) {
     /* RES b, m */
+    } else if(1) {
 
     /* Jump, Call, and Return */
     /* JP nn */
+    } else if(operand_1 == 0xC3) {
+        operand_2 = z80_fetch_byte();
+        operand_3 = z80_fetch_byte();
+
+        s_reg = ((operand_3 << 8) | operand_2);
+
+        if(!z80_ram_valid(s_reg)) {
+            printf("Unknown target RAM address %d for JP nn \
+                    instruction\n", s_reg);
+        }
+        z80_state.pc = z80_state.ram[s_reg];
+
     /* JP cc, nn */
+    } else if((operand_1 & 0xC7) == 0xC2) {
+        operand_2 = z80_fetch_byte();
+        operand_3 = z80_fetch_byte();
+
+        if((operand_1 & 0x38 >> 3) ) {
+            s_reg = ((operand_3 << 8) | operand_2);
+
+            if(!z80_ram_valid(s_reg)) {
+                printf("Unknown target RAM address %d for JP nn \
+                        instruction\n", s_reg);
+            }
+            z80_state.pc = z80_state.ram[s_reg];
+        }
     /* JR e */
+    } else if(1) {
     /* JR C, e */
+    } else if(1) {
     /* JR NC, e */
+    } else if(1) {
     /* JR Z, e */
+    } else if(1) {
     /* JR NZ, e */
+    } else if(1) {
     /* JP (HL) */
+    } else if(1) {
     /* JP (IX) */
+    } else if(1) {
     /* JP (IY) */
+    } else if(1) {
     /* DJNZ, e */
+    } else if(1) {
     /* CALL nn */
+    } else if(1) {
     /* CALL cc, nn */
+    } else if(1) {
     /* RET */
+    } else if(1) {
     /* RET cc */
+    } else if(1) {
     /* RETI */
+    } else if(1) {
     /* RETN */
+    } else if(1) {
     /*RST p */
+    } else if(1) {
 
     /* Input/Output */
     /* IN A, (n) */
+    } else if(1) {
     /* IN r (C)*/
+    } else if(1) {
     /* INI */
+    } else if(1) {
     /* INIR */
+    } else if(1) {
     /* IND */
+    } else if(1) {
     /* INDR */
+    } else if(1) {
     /* OUT (n), A */
+    } else if(1) {
     /* OUT (C), r */
+    } else if(1) {
     /* OUTI */
+    } else if(1) {
     /* OTIR */
+    } else if(1) {
     /* OUTD */
+    } else if(1) {
     /* OTDR */
+    } else if(1) {
     }
-
 }
 
