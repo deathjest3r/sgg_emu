@@ -26,8 +26,7 @@ SDL_Window *G_window = NULL;
 SDL_Renderer *G_renderer = NULL;
 
 void gg_graphics_init() {
-
-     if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
         printf("%s\n", SDL_GetError());
         return;
     }

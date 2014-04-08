@@ -21,6 +21,14 @@
 #ifndef __CARTRIDGE_H__
 #define __CARTRIDGE_H__
 
+struct gg_cartridge_metadata {
+    uint8_t tmr_sega[8];
+    uint8_t reserved[1];
+    uint8_t checksum[2];
+    uint8_t product_code_ver[3];
+    uint8_t region_code_rom_size[1];
+};
+
 /*0x7ff0 - TMR SEGA*/
 TMR_SEGA = [0x54, 0x4D, 0x52, 0x20, 0x53, 0x45, 0x47, 0x41]
 

@@ -399,6 +399,9 @@ void z80_decode_inst() {
         /* ADD A, (IX+d) */
         } else if (operand_2 == 0x86) {
             /* TODO: Set condition flags correctly */
+
+        /* JP (IX) */
+        } else if (operand_2 == 0xE9) {
         }
     } else if(operand_1 == 0xFD) {
         operand_2 = z80_fetch_byte();
@@ -910,6 +913,7 @@ void z80_decode_inst() {
     } else if(1) {
     /* IM 2 */
 
+
     /* ADD HL, ss */
     } else if(1) {
     /* ADC HL, ss */
@@ -1026,15 +1030,76 @@ void z80_decode_inst() {
         z80_state.pc = s_reg;
 
     /* JR C, e */
-    } else if(1) {
+    } else if(operand_1 == 0x38) {
+        if(z80_flag_set(z80_state.flags, CARRY_FLAG)) {
+            operand_2 = z80_fetch_byte();
+            if(!z80_ram_valid(z80_state.pc + operand_2)) {
+                printf("Unknown target RAM address %d for JR C, e \
+                        instruction\n", s_reg);
+            }
+            /*TODO: Check if this is right not sure if I have to add 1*/
+            z80_state.pc += operand_2;
+        } else {
+            /* Just skip the branch value*/
+            z80_fetch_byte();
+        }
+    }
+
     /* JR NC, e */
-    } else if(1) {
+    } else if(operand_1 == 0x30) {
+        if(!z80_flag_set(z80_state.flags, CARRY_FLAG)) {
+            operand_2 = z80_fetch_byte();
+            if(!z80_ram_valid(z80_state.pc + operand_2)) {
+                printf("Unknown target RAM address %d for JR C, e \
+                        instruction\n", s_reg);
+            }
+            /*TODO: Check if this is right not sure if I have to add 1*/
+            z80_state.pc += operand_2;
+        } else {
+            /* Just skip the branch value*/
+            z80_fetch_byte();
+        }
+
     /* JR Z, e */
-    } else if(1) {
+    } else if(operand_1 == 0x28) {
+        if(z80_flag_set(z80_state.flags, ZERO_FLAG)) {
+            operand_2 = z80_fetch_byte();
+            if(!z80_ram_valid(z80_state.pc + operand_2)) {
+                printf("Unknown target RAM address %d for JR Z, e \
+                        instruction\n", s_reg);
+            }
+            /*TODO: Check if this is right not sure if I have to add 1*/
+            z80_state.pc += operand_2;
+        } else {
+            /* Just skip the branch value*/
+            z80_fetch_byte();
+        }
+
     /* JR NZ, e */
-    } else if(1) {
+    } else if(operand_1 == 0x20) {
+        if(!z80_flag_set(z80_state.flags, ZERO_FLAG)) {
+            operand_2 = z80_fetch_byte();
+            if(!z80_ram_valid(z80_state.pc + operand_2)) {
+                printf("Unknown target RAM address %d for JR Z, e \
+                        instruction\n", s_reg);
+            }
+            /*TODO: Check if this is right not sure if I have to add 1*/
+            z80_state.pc += operand_2;
+        } else {
+            /* Just skip the branch value*/
+            z80_fetch_byte();
+        }
+
     /* JP (HL) */
-    } else if(1) {
+    } else if(operand_1 == 0xE9) {
+        s_reg = ((z80_state.gp[reg_H] << 8) | z80_state.gp[reg_L]);
+
+        if (!z80_ram_valid(s_reg)) {
+            printf("Unkown source RAM address %u for JP (HL) instruction\n",
+                    s_reg);
+        }
+        z80_state.pc = z80_state.ram[s_reg];
+
     /* JP (IX) */
     } else if(1) {
     /* JP (IY) */
