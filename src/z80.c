@@ -1043,7 +1043,6 @@ void z80_decode_inst() {
             /* Just skip the branch value*/
             z80_fetch_byte();
         }
-    }
 
     /* JR NC, e */
     } else if(operand_1 == 0x30) {

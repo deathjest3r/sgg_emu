@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
             show_help(argv[0]);
         }
     }
-
-    rom_ptr = loader_load_rom(rom_path);
+    rom_ptr = malloc(512 * sizeof(uint8_t));
+    rom_ptr = loader_load_rom(rom_path, rom_ptr);
     if (rom_ptr == NULL) {
         printf("Could not load rom from %s\n", rom_path);
         /*return -1;*/

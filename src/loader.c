@@ -24,8 +24,7 @@
 #include "../include/loader.h"
 
 
-uint8_t* loader_load_rom(const char* path) {
-    uint8_t rom_buffer[2048];
+uint8_t* loader_load_rom(const char* path, uint8_t* rom_buffer) {
     size_t blocks = 0;
 
     FILE* rom_fd = fopen(path, "r");
@@ -34,12 +33,12 @@ uint8_t* loader_load_rom(const char* path) {
         return NULL;
     }
 
-    blocks = fread(&rom_buffer, sizeof(uint8_t), 2048, rom_fd);
-    if (blocks < 2048) {
+    blocks = fread(&rom_buffer, sizeof(uint8_t), 512, rom_fd);
+    if (blocks < 512) {
         printf("Could only read %u Bytes\n", (unsigned int)blocks);
         return NULL;
     }
 
     printf("%s\n", path);
-    return NULL;
+    return rom_buffer;
 }
