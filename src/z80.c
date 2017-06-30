@@ -129,6 +129,14 @@ int z80_condition_true(uint8_t cc) {
   return 0;
 }
 
+void z80_set_carry_flag() {
+  z80_state.vcpu.flags |= CARRY_FLAG;
+}
+
+void z80_clear_carry_flag() {
+  z80_state.vcpu.flags &= ~CARRY_FLAG;
+}
+
 void z80_update_flags(uint8_t value, uint8_t mask) {
   if(z80_flag_set(mask, SIGN_FLAG)) {
     /* S is set if result is negative; reset otherwise*/
@@ -165,15 +173,6 @@ void z80_update_flags(uint8_t value, uint8_t mask) {
       z80_state.vcpu.flags |= PARITYOVERFLOW_FLAG;
     else
       z80_state.vcpu.flags &= ~PARITYOVERFLOW_FLAG;
-  }
-
-  /*TODO: Fix this!*/
-  if(z80_flag_set(mask, CARRY_FLAG)) {
-    /* C is set if carry from bit 7; reset otherwise */
-    if((value & 0x100) == 0x100)
-      z80_state.vcpu.flags |= CARRY_FLAG;
-    else
-      z80_state.vcpu.flags &= ~CARRY_FLAG;
   }
 }
 
