@@ -19,9 +19,9 @@
 #
 CC=gcc
 LD=gcc
-CFLAGS=-std=gnu99 -Wall -Wextra -Werror -pedantic
+CFLAGS=-std=gnu99 -g -O0 -Wall -DDEBUG -Wextra -I/opt/local/include -Iinclude
 LDFLAGS =
-LDLIBS = -lSDL2
+LDLIBS = -L/opt/local/lib -lSDL2
 HDR := $(wildcard include/*)
 SRC := $(wildcard src/*.c)
 OBJ := $(patsubst %.c,%.o,$(SRC))
