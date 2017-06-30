@@ -75,7 +75,10 @@ void dump_stack() {
   for(i = 255; i > 191; i--) {
     if((i % 16) == 15)
       printf("\n%04x: ", i);
-    printf("%02x ", z80_state.stack[i]);
+    if(z80_state.vcpu.sp == i)
+      printf("[%02x] ", z80_state.stack[i]);
+    else
+      printf(" %02x  ", z80_state.stack[i]);
   }
   printf("\n-----------------------------------\n\n");
 }
