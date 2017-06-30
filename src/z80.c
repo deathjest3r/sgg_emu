@@ -237,7 +237,7 @@ void z80_decode_insn() {
 
   operand_1 = z80_fetch_byte();
 #ifdef DEBUG
-  printf("0x%04x:\t0x%02x\t", z80_state.vcpu.pc, operand_1);
+  printf("0x%04x:\t0x%02x\t", z80_state.vcpu.pc - 1, operand_1);
 #endif
 
   /* LD r, r' */
@@ -697,7 +697,7 @@ void z80_decode_insn() {
         z80_state.vcpu.gp[reg_B] = z80_state.ram[tmp + 1];
 
 #ifdef DEBUG
-        printf("LD BC, (0x%04x)\t; 0x%02x%02x\n", tmp, z80_state.vcpu.gp[reg_C], z80_state.vcpu.gp[reg_B]);
+        printf("LD BC, (0x%04x)\t; 0x%02x%02x\n", tmp, z80_state.vcpu.gp[reg_B], z80_state.vcpu.gp[reg_C]);
 #endif
       /*Target: DE*/
       } else if((operand_2 & 0x30) == 0x10) {
@@ -1159,6 +1159,7 @@ void z80_decode_insn() {
 
   /* JR C, e */
   } else if(operand_1 == 0x38) {
+    printf("ERROR!\n");
     if(z80_flag_set(z80_state.vcpu.flags, CARRY_FLAG)) {
       operand_2 = z80_fetch_byte();
       if(!z80_ram_valid(z80_state.vcpu.pc + operand_2)) {
@@ -1174,6 +1175,7 @@ void z80_decode_insn() {
 
   /* JR NC, e */
   } else if(operand_1 == 0x30) {
+    printf("ERROR!\n");
     if(!z80_flag_set(z80_state.vcpu.flags, CARRY_FLAG)) {
       operand_2 = z80_fetch_byte();
       if(!z80_ram_valid(z80_state.vcpu.pc + operand_2)) {
@@ -1248,7 +1250,7 @@ void z80_decode_insn() {
     z80_state.stack[z80_state.vcpu.sp] = (uint8_t)(z80_state.vcpu.pc & 0x00ff);
     z80_state.vcpu.pc = tmp;
 #ifdef DEBUG
-    printf("CALL 0x%0x (PC=0x%04x, SP=0x%04x)\n", z80_state.vcpu.pc, z80_state.vcpu.sp);
+    printf("CALL 0x%0x (SP=0x%04x)\n", z80_state.vcpu.pc, z80_state.vcpu.sp);
     dump_stack();
 #endif
 
@@ -1260,7 +1262,8 @@ void z80_decode_insn() {
     z80_state.vcpu.sp++;
 
 #ifdef DEBUG
-    printf("RET\n");
+    printf("RET\t; 0x%04x\n", z80_state.vcpu.pc);
+    dump_stack();
 #endif
   /* RET cc */
   } else if((operand_1 & 0xC7) == 0xC0) {
