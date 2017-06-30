@@ -50,4 +50,10 @@
 #define ZERO_FLAG               0x40 /*Z*/
 #define SIGN_FLAG               0x80 /*S*/
 
+static const uint8_t   SEGA_STRING[] = { 0x54, 0x4d, 0x52, 0x20, 0x53, 0x45, 0x47, 0x41, 0x00 };
+static const uint16_t  HEADER_LOC[]  = { 0x1ff0, 0x3ff0, 0x7ff0 };
+static const char*     REGION[]      = { "UNKNOWN", "UNKNOWN", "UNKNOWN", "SMS Japan",
+                                         "SMS Export", "GG Japan", "GG Export",
+                                         "GG International" };
+
 #endif /*__ENCODING_H__*/
