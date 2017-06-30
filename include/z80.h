@@ -24,7 +24,7 @@
 #define RAM_SZ  8192
 #define VRAM_SZ 16384
 
-void z80_init(void);
+void z80_init(const char* rom_path);
 void z80_emulate_cycle(void);
 
 void z80_update_flags(uint8_t value, uint8_t mask);
@@ -37,6 +37,7 @@ int z80_ram_valid(uint16_t);
 uint8_t z80_get_t_reg(uint8_t);
 uint8_t z80_get_s_reg(uint8_t);
 uint8_t z80_fetch_instruction(void);
+void z80_decode_insn(void);
 
 void z80_swap_reg(uint8_t*, uint8_t*);
 
